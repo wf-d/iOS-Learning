@@ -18,6 +18,7 @@
 		CE80AA7815D911A200220F8C /* PostingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE80AA7715D911A200220F8C /* PostingViewController.m */; };
 		CE80AA7A15D911AE00220F8C /* PostingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE80AA7915D911AE00220F8C /* PostingViewController.xib */; };
 		CE80AA8315D9240500220F8C /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE80AA8215D9240500220F8C /* FacebookSDK.framework */; };
+		CE80AA8715D92E0400220F8C /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = CE80AA8615D92E0400220F8C /* Common.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,8 @@
 		CE80AA7715D911A200220F8C /* PostingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostingViewController.m; path = ViewControllers/PostingViewController.m; sourceTree = "<group>"; };
 		CE80AA7915D911AE00220F8C /* PostingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PostingViewController.xib; path = Resources/XIBs/PostingViewController.xib; sourceTree = "<group>"; };
 		CE80AA8215D9240500220F8C /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = FB/Libs/FacebookSDK.framework; sourceTree = "<group>"; };
+		CE80AA8515D92E0400220F8C /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = Common/Common.h; sourceTree = "<group>"; };
+		CE80AA8615D92E0400220F8C /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Common.m; path = Common/Common.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +89,7 @@
 		CE80AA5215D9092800220F8C /* FB */ = {
 			isa = PBXGroup;
 			children = (
+				CE80AA8415D92DA600220F8C /* Common */,
 				CE80AA6915D909B900220F8C /* Resources */,
 				CE80AA6315D9098300220F8C /* ViewControllers */,
 				CE80AA5B15D9092800220F8C /* AppDelegate.h */,
@@ -132,6 +136,15 @@
 				CE80AA6B15D90A0F00220F8C /* HomeViewController.xib */,
 			);
 			name = XIBs;
+			sourceTree = "<group>";
+		};
+		CE80AA8415D92DA600220F8C /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				CE80AA8515D92E0400220F8C /* Common.h */,
+				CE80AA8615D92E0400220F8C /* Common.m */,
+			);
+			name = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,6 +215,7 @@
 				CE80AA5D15D9092800220F8C /* AppDelegate.m in Sources */,
 				CE80AA6715D909AC00220F8C /* HomeViewController.m in Sources */,
 				CE80AA7815D911A200220F8C /* PostingViewController.m in Sources */,
+				CE80AA8715D92E0400220F8C /* Common.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,7 +281,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../Libs/FacebookSDK\"",
 					"\"$(SRCROOT)/FB/Libs\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -284,7 +297,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../Libs/FacebookSDK\"",
 					"\"$(SRCROOT)/FB/Libs\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

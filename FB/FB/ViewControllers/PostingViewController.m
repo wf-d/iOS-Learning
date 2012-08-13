@@ -20,9 +20,12 @@
 #pragma mark - Synthesize
 
 
-@synthesize testProperty = _testProperty;
 @synthesize labelName = _labelName;
 @synthesize labelMessage = _labelMessage;
+@synthesize buttonPost = _buttonPost;
+@synthesize buttonAuth = _buttonAuth;
+@synthesize fieldName = _fieldName;
+@synthesize fieldMessage = _fieldMessage;
 
 
 
@@ -47,6 +50,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(sessionStateChanged:)
+                                                 name:FBSessionStateChangedNotification
+                                               object:nil];
+    
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate openSessionWithAllowLoginUI:NO];
 }
 
 
@@ -54,9 +65,15 @@
 
 - (void)viewDidUnload
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     [self setLabelName:nil];
     [self setLabelMessage:nil];
+    [self setButtonPost:nil];
+    [self setButtonAuth:nil];
 
+    [self setFieldName:nil];
+    [self setFieldMessage:nil];
     [super viewDidUnload];
 }
 
@@ -67,7 +84,11 @@
 {
     [_labelName release];
     [_labelMessage release];
+    [_buttonPost release];
+    [_buttonAuth release];
 
+    [_fieldName release];
+    [_fieldMessage release];
     [super dealloc];
 }
 
@@ -85,15 +106,7 @@
 #pragma mark - Setters
 
 
-- (void) setTestProperty:(NSString *)testProperty
-{
-    if ( testProperty != _testProperty )
-    {
-        [_testProperty release];
-        _testProperty = testProperty;
-        [_testProperty retain];
-    }
-}
+
 
 
 
@@ -103,9 +116,67 @@
 
 - (IBAction)clickedPost:(id)sender
 {
-    
+    if ( [self.fieldName.text isEqualToString:@""] || [self.fieldMessage.text isEqualToString:@""] )
+    {
+        [Common showAlertWithTitle:@"Error" andMessage:@"Fill all fileds."];
+    }
 }
 
+
+
+
+- (IBAction)clickedAuth:(id)sender
+{
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    if ( FBSession.activeSession.isOpen )
+    {
+        [appDelegate closeSession];
+    }
+    else
+    {
+        // The user has initiated a login, so call the openSession method
+        // and show the login UX if necessary.
+        [appDelegate openSessionWithAllowLoginUI:YES];
+    }
+}
+
+
+
+
+#pragma mark - Facebook
+
+
+- (void)sessionStateChanged:(NSNotification*)notification
+{
+    if ( FBSession.activeSession.isOpen )
+    {
+        [self.buttonAuth setTitle:@"Logout" forState:UIControlStateNormal];
+    }
+    else
+    {
+        [self.buttonAuth setTitle:@"Login" forState:UIControlStateNormal];
+    }
+}
+
+
+
+
+#pragma mark - Touches
+
+
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = [[event allTouches] anyObject];
+    
+    if ( [self.labelName isFirstResponder] && self.labelName != touch.view )
+    {
+        [self.labelName resignFirstResponder];
+    }
+    else if ( [self.labelMessage isFirstResponder] && self.labelMessage != touch.view )
+    {
+        [self.labelMessage resignFirstResponder];
+    }
+}
 
 
 
