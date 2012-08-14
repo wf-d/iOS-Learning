@@ -94,6 +94,8 @@
             
             [self.tableViewFriends reloadData];
             [self.activityIndicator stopAnimating];
+            
+            self.title = [NSString stringWithFormat:@"Friends (%d)", [friends count]];
         }
         
         //[Common showAlertWithTitle:@"Result" andMessage:alertText];
