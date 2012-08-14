@@ -32,11 +32,10 @@ UITextFieldDelegate>
 @property (retain, nonatomic) IBOutlet UITextView *fieldDescription;
 
 @property (retain, nonatomic) IBOutlet UIButton *buttonPost;
-@property (retain, nonatomic) IBOutlet UIButton *buttonAuth;
+@property (retain, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 
 - (IBAction)clickedPost:(id)sender;
-- (IBAction)clickedAuth:(id)sender;
 
 
 @end

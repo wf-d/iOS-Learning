@@ -25,8 +25,9 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
 #pragma mark - Synthesize
 
 
+@synthesize activityIndicator = _activityIndicator;
 @synthesize params = _params;
-@synthesize buttonPost = _buttonPost, buttonAuth = _buttonAuth;
+@synthesize buttonPost = _buttonPost;
 @synthesize fieldMessage = _fieldMessage, fieldLink = _fieldLink, fieldCaption = _fieldCaption, fieldDescription = _fieldDescription;
 
 
@@ -38,9 +39,9 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self)
+    if ( self )
     {
-        // Custom initialization
+        self.title = @"Posting";
     }
 
     return self;
@@ -52,20 +53,34 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+}
+
+
+
+
+- (void)viewDidUnload
+{  
+    [self setButtonPost:nil];
+    [self setFieldMessage:nil];
+    [self setFieldDescription:nil];
+    [self setFieldLink:nil];
+    [self setFieldCaption:nil];
+    [self setActivityIndicator:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(sessionStateChanged:)
-                                                 name:FBSessionStateChangedNotification
-                                               object:nil];
-    
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    [appDelegate openSessionWithAllowLoginUI:NO];
+    [super viewDidUnload];
+}
+
+
+
+
+- (void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
     if ( !self.params )
     {
         self.params = [[NSMutableDictionary alloc] init];
     }
-        
     
     self.fieldMessage.text = [self.params valueForKey:@"message"];
     self.fieldLink.text = [self.params valueForKey:@"link"];
@@ -76,27 +91,18 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
     {
         [self resetDescriptionField];
     }
-    
-    [self trigUiAccordingToSession];
 }
 
 
 
 
-- (void)viewDidUnload
+- (void) viewWillDisappear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [currentFirstResponder resignFirstResponder];
+    currentFirstResponder = nil;
     
-    [self setButtonPost:nil];
-    [self setButtonAuth:nil];
-    [self setFieldMessage:nil];
-    [self setFieldDescription:nil];
-    [self setFieldLink:nil];
-    [self setFieldCaption:nil];
-    
-    [super viewDidUnload];
+    [super viewWillDisappear:animated];
 }
-
 
 
 
@@ -104,11 +110,11 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
 {
     [_params release];
     [_buttonPost release];
-    [_buttonAuth release];
     [_fieldMessage release];
     [_fieldDescription release];
     [_fieldLink release];
     [_fieldCaption release];
+    [_activityIndicator release];
     
     [super dealloc];
 }
@@ -208,42 +214,7 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
 
 
 
-- (void) trigUiAccordingToSession
-{
-    if ( FBSession.activeSession.isOpen )
-    {
-        [self.buttonAuth setTitle:@"Logout" forState:UIControlStateNormal];
-        self.buttonPost.enabled = YES;
-    }
-    else
-    {
-        [self.buttonAuth setTitle:@"Login" forState:UIControlStateNormal];
-        self.buttonPost.enabled = NO;
-    }
-}
-
-
-
-
 #pragma mark - Actions
-
-
-- (IBAction)clickedAuth:(id)sender
-{
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    if ( FBSession.activeSession.isOpen )
-    {
-        [appDelegate closeSession];
-    }
-    else
-    {
-        // The user has initiated a login, so call the openSession method
-        // and show the login UX if necessary.
-        [appDelegate openSessionWithAllowLoginUI:YES];
-    }
-}
-
-
 
 
 - (IBAction)clickedPost:(id)sender
@@ -257,7 +228,8 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
         
         return;
     }
-    
+    self.buttonPost.enabled = NO;
+    [self.activityIndicator startAnimating];
     
     [self.params setValue:self.fieldMessage.text forKey:@"message"];
     [self.params setValue:self.fieldLink.text forKey:@"link"];
@@ -271,6 +243,9 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
                                  HTTPMethod:@"POST"
                           completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
     {
+        self.buttonPost.enabled = YES;
+        [self.activityIndicator stopAnimating];
+        
         NSString *alertText;
         if ( error )
         {
@@ -283,17 +258,6 @@ NSString *const kPlaceholderPostMessage = @"Say something about this...";
         
         [Common showAlertWithTitle:@"Result" andMessage:alertText];
     }];
-}
-
-
-
-
-#pragma mark - Facebook
-
-
-- (void) sessionStateChanged:(NSNotification*)notification
-{
-    [self trigUiAccordingToSession];
 }
 
 

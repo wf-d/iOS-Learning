@@ -19,6 +19,9 @@
 		CE80AA7A15D911AE00220F8C /* PostingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE80AA7915D911AE00220F8C /* PostingViewController.xib */; };
 		CE80AA8315D9240500220F8C /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE80AA8215D9240500220F8C /* FacebookSDK.framework */; };
 		CE80AA8715D92E0400220F8C /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = CE80AA8615D92E0400220F8C /* Common.m */; };
+		CE8225B715DA55CF00852C6D /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8225B515DA55CF00852C6D /* FriendListViewController.m */; };
+		CE8225BB15DA560400852C6D /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8225BA15DA560400852C6D /* FriendListViewController.xib */; };
+		CE8225BF15DA611B00852C6D /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8225BE15DA611B00852C6D /* User.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +44,11 @@
 		CE80AA8215D9240500220F8C /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = FB/Libs/FacebookSDK.framework; sourceTree = "<group>"; };
 		CE80AA8515D92E0400220F8C /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = Common/Common.h; sourceTree = "<group>"; };
 		CE80AA8615D92E0400220F8C /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Common.m; path = Common/Common.m; sourceTree = "<group>"; };
+		CE8225B415DA55CF00852C6D /* FriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendListViewController.h; path = ViewControllers/FriendListViewController.h; sourceTree = "<group>"; };
+		CE8225B515DA55CF00852C6D /* FriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FriendListViewController.m; path = ViewControllers/FriendListViewController.m; sourceTree = "<group>"; };
+		CE8225BA15DA560400852C6D /* FriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FriendListViewController.xib; path = Resources/XIBs/FriendListViewController.xib; sourceTree = "<group>"; };
+		CE8225BD15DA611B00852C6D /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Models/User.h; sourceTree = "<group>"; };
+		CE8225BE15DA611B00852C6D /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Models/User.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +97,7 @@
 		CE80AA5215D9092800220F8C /* FB */ = {
 			isa = PBXGroup;
 			children = (
+				CE8225BC15DA60FC00852C6D /* Models */,
 				CE80AA8415D92DA600220F8C /* Common */,
 				CE80AA6915D909B900220F8C /* Resources */,
 				CE80AA6315D9098300220F8C /* ViewControllers */,
@@ -117,6 +126,8 @@
 				CE80AA7715D911A200220F8C /* PostingViewController.m */,
 				CE80AA6415D909AC00220F8C /* HomeViewController.h */,
 				CE80AA6515D909AC00220F8C /* HomeViewController.m */,
+				CE8225B415DA55CF00852C6D /* FriendListViewController.h */,
+				CE8225B515DA55CF00852C6D /* FriendListViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -132,6 +143,7 @@
 		CE80AA6A15D909C100220F8C /* XIBs */ = {
 			isa = PBXGroup;
 			children = (
+				CE8225BA15DA560400852C6D /* FriendListViewController.xib */,
 				CE80AA7915D911AE00220F8C /* PostingViewController.xib */,
 				CE80AA6B15D90A0F00220F8C /* HomeViewController.xib */,
 			);
@@ -145,6 +157,15 @@
 				CE80AA8615D92E0400220F8C /* Common.m */,
 			);
 			name = Common;
+			sourceTree = "<group>";
+		};
+		CE8225BC15DA60FC00852C6D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CE8225BD15DA611B00852C6D /* User.h */,
+				CE8225BE15DA611B00852C6D /* User.m */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,6 +222,7 @@
 				CE80AA5715D9092800220F8C /* InfoPlist.strings in Resources */,
 				CE80AA6C15D90A0F00220F8C /* HomeViewController.xib in Resources */,
 				CE80AA7A15D911AE00220F8C /* PostingViewController.xib in Resources */,
+				CE8225BB15DA560400852C6D /* FriendListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,6 +238,8 @@
 				CE80AA6715D909AC00220F8C /* HomeViewController.m in Sources */,
 				CE80AA7815D911A200220F8C /* PostingViewController.m in Sources */,
 				CE80AA8715D92E0400220F8C /* Common.m in Sources */,
+				CE8225B715DA55CF00852C6D /* FriendListViewController.m in Sources */,
+				CE8225BF15DA611B00852C6D /* User.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +276,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -269,7 +293,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

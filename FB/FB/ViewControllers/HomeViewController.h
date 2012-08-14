@@ -11,6 +11,12 @@
 
 #import <UIKit/UIKit.h>
 #import "PostingViewController.h"
+#import "FriendListViewController.h"
+
+
+
+@class PostingViewController;
+@class FriendListViewController;
 
 
 
@@ -18,10 +24,15 @@
 @interface HomeViewController : UIViewController
 {
     PostingViewController *postingViewController;
+    FriendListViewController *friendListViewController;
 }
 
 
+@property (retain, nonatomic) IBOutlet UIButton *buttonAuth;
+
+- (IBAction)clickedAuth:(id)sender;
 - (IBAction)clickedPostToFeed:(id)sender;
+- (IBAction)clickedFriends:(id)sender;
 
 
 @end

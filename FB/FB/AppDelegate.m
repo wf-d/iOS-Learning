@@ -120,9 +120,16 @@ NSString *const FBSessionStateChangedNotification = @"c.FB.Login:FBSessionStateC
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
-    // attempt to extract a token from the url
-    return [FBSession.activeSession handleOpenURL:url];
+         annotation:(id)annotation
+{
+   if ( FBSession.activeSession.state == FBSessionStateClosedLoginFailed )
+   {
+       return NO;
+   }
+   else
+   {
+       return [FBSession.activeSession handleOpenURL:url];
+   }
 }
 
 
@@ -162,14 +169,18 @@ NSString *const FBSessionStateChangedNotification = @"c.FB.Login:FBSessionStateC
                                                         object:session];
     
     
+    
     if ( error )
     {
+        NSLog(@"FB Auth Error: %@", error.localizedDescription);
+        /*
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
                                                             message:error.localizedDescription
                                                            delegate:nil
                                                   cancelButtonTitle:@"OK"
                                                   otherButtonTitles:nil];
         [alertView show];
+         */
     }
 }
 

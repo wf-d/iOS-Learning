@@ -11,6 +11,12 @@
 
 
 #import <Foundation/Foundation.h>
+#import "AppDelegate.h"
+
+
+
+
+@class AppDelegate;
 
 
 
@@ -20,6 +26,8 @@
 
 
 + (void) showAlertWithTitle:(NSString *)title andMessage:(NSString *)message;
++ (AppDelegate *) appDelegate;
++ (NSString *) stringFromLongLong:(long long)longLongValue;
 
 
 @end

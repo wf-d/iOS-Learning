@@ -36,4 +36,21 @@
 
 
 
+
++ (AppDelegate *) appDelegate
+{
+    return [[UIApplication sharedApplication] delegate];
+}
+
+
+
+
++ (NSString *) stringFromLongLong:(long long)longLongValue;
+{
+    return [NSString stringWithFormat:@"%lld", longLongValue];
+}
+
+
+
+
 @end
