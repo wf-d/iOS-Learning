@@ -37,5 +37,7 @@ UITextFieldDelegate>
 
 - (IBAction)clickedPost:(id)sender;
 
+- (void) resetDescriptionField;
+
 
 @end

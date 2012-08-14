@@ -34,5 +34,7 @@
 - (IBAction)clickedPostToFeed:(id)sender;
 - (IBAction)clickedFriends:(id)sender;
 
+- (void) trigUiAccordingToSession;
+
 
 @end
