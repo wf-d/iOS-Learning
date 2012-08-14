@@ -135,7 +135,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *reusubleIdentifier = [NSString stringWithFormat:@"%d.%d", indexPath.section, indexPath.row];
+    NSString *reusubleIdentifier = NSStringFromClass([UITableViewCell class]);
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusubleIdentifier];
     
     if ( cell == nil )
@@ -148,6 +148,17 @@
     return cell;    
 }
 
+
+
+
+#pragma mark - UITableViewDelegate
+
+/*
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 64.0f;
+}
+*/
 
 
 
