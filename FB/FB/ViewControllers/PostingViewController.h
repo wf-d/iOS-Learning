@@ -17,14 +17,22 @@
 
 
 @interface PostingViewController : UIViewController
+<UITextFieldDelegate,
+UITextFieldDelegate>
+{
+    id currentFirstResponder;
+}
 
 
-@property (retain, nonatomic) IBOutlet UITextField *labelName;
-@property (retain, nonatomic) IBOutlet UITextField *labelMessage;
+@property (retain, nonatomic) NSMutableDictionary *params;
+
+@property (retain, nonatomic) IBOutlet UITextField *fieldMessage;
+@property (retain, nonatomic) IBOutlet UITextField *fieldLink;
+@property (retain, nonatomic) IBOutlet UITextField *fieldCaption;
+@property (retain, nonatomic) IBOutlet UITextView *fieldDescription;
+
 @property (retain, nonatomic) IBOutlet UIButton *buttonPost;
 @property (retain, nonatomic) IBOutlet UIButton *buttonAuth;
-@property (retain, nonatomic) IBOutlet UITextField *fieldName;
-@property (retain, nonatomic) IBOutlet UITextField *fieldMessage;
 
 
 - (IBAction)clickedPost:(id)sender;

@@ -14,18 +14,20 @@
 
 
 
+NSString *const kPlaceholderPostMessage = @"Say something about this...";
+
+
+
+
 @implementation PostingViewController
 
 
 #pragma mark - Synthesize
 
 
-@synthesize labelName = _labelName;
-@synthesize labelMessage = _labelMessage;
-@synthesize buttonPost = _buttonPost;
-@synthesize buttonAuth = _buttonAuth;
-@synthesize fieldName = _fieldName;
-@synthesize fieldMessage = _fieldMessage;
+@synthesize params = _params;
+@synthesize buttonPost = _buttonPost, buttonAuth = _buttonAuth;
+@synthesize fieldMessage = _fieldMessage, fieldLink = _fieldLink, fieldCaption = _fieldCaption, fieldDescription = _fieldDescription;
 
 
 
@@ -58,6 +60,24 @@
     
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate openSessionWithAllowLoginUI:NO];
+    
+    if ( !self.params )
+    {
+        self.params = [[NSMutableDictionary alloc] init];
+    }
+        
+    
+    self.fieldMessage.text = [self.params valueForKey:@"message"];
+    self.fieldLink.text = [self.params valueForKey:@"link"];
+    self.fieldCaption.text = [self.params valueForKey:@"caption"];
+    self.fieldDescription.text = [self.params valueForKey:@"description"];
+    
+    if ( [self.fieldDescription.text isEqualToString:@""] )
+    {
+        [self resetDescriptionField];
+    }
+    
+    [self trigUiAccordingToSession];
 }
 
 
@@ -67,13 +87,13 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [self setLabelName:nil];
-    [self setLabelMessage:nil];
     [self setButtonPost:nil];
     [self setButtonAuth:nil];
-
-    [self setFieldName:nil];
     [self setFieldMessage:nil];
+    [self setFieldDescription:nil];
+    [self setFieldLink:nil];
+    [self setFieldCaption:nil];
+    
     [super viewDidUnload];
 }
 
@@ -82,13 +102,14 @@
 
 - (void)dealloc
 {
-    [_labelName release];
-    [_labelMessage release];
+    [_params release];
     [_buttonPost release];
     [_buttonAuth release];
-
-    [_fieldName release];
     [_fieldMessage release];
+    [_fieldDescription release];
+    [_fieldLink release];
+    [_fieldCaption release];
+    
     [super dealloc];
 }
 
@@ -103,26 +124,108 @@
 
 
 
-#pragma mark - Setters
+#pragma mark - UITextFieldDelegate
+
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    currentFirstResponder = textField;
+}
 
 
 
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    if ( currentFirstResponder == textField )
+    {
+        currentFirstResponder = nil;
+    }
+    
+    return YES;
+}
+
+
+
+- (BOOL) textFieldShouldReturn:(UITextField *)textField
+{
+    if ( textField == self.fieldMessage )
+    {
+        [self.fieldLink becomeFirstResponder];
+    }
+    else if ( textField == self.fieldLink )
+    {
+        [self.fieldCaption becomeFirstResponder];
+    }
+    else if ( textField == self.fieldCaption )
+    {
+        [self.fieldDescription becomeFirstResponder];
+    }
+    
+    return YES;
+}
+
+
+
+
+#pragma mark - UITextViewDelegate
+
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    currentFirstResponder = textView;
+    
+    if ( [textView.text isEqualToString:kPlaceholderPostMessage] )
+    {
+        textView.text = @"";
+        textView.textColor = [UIColor blackColor];
+    }
+}
+
+
+
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    if ( [textView.text isEqualToString:@""] )
+    {
+        [self resetDescriptionField];
+    }
+}
+
+
+
+
+#pragma mark - UI Helpers
+
+
+- (void) resetDescriptionField
+{
+    self.fieldDescription.text = kPlaceholderPostMessage;
+    self.fieldDescription.textColor = [UIColor lightGrayColor];    
+}
+
+
+
+
+- (void) trigUiAccordingToSession
+{
+    if ( FBSession.activeSession.isOpen )
+    {
+        [self.buttonAuth setTitle:@"Logout" forState:UIControlStateNormal];
+        self.buttonPost.enabled = YES;
+    }
+    else
+    {
+        [self.buttonAuth setTitle:@"Login" forState:UIControlStateNormal];
+        self.buttonPost.enabled = NO;
+    }
+}
 
 
 
 
 #pragma mark - Actions
-
-
-- (IBAction)clickedPost:(id)sender
-{
-    if ( [self.fieldName.text isEqualToString:@""] || [self.fieldMessage.text isEqualToString:@""] )
-    {
-        [Common showAlertWithTitle:@"Error" andMessage:@"Fill all fileds."];
-    }
-}
-
-
 
 
 - (IBAction)clickedAuth:(id)sender
@@ -143,19 +246,54 @@
 
 
 
+- (IBAction)clickedPost:(id)sender
+{
+    if (    [self.fieldMessage.text isEqualToString:@""] ||
+            [self.fieldLink.text isEqualToString:@""] ||
+            [self.fieldCaption.text isEqualToString:@""] ||
+            ([self.fieldDescription.text isEqualToString:kPlaceholderPostMessage]) )
+    {
+        [Common showAlertWithTitle:@"Error" andMessage:@"Fill all fileds."];
+        
+        return;
+    }
+    
+    
+    [self.params setValue:self.fieldMessage.text forKey:@"message"];
+    [self.params setValue:self.fieldLink.text forKey:@"link"];
+    [self.params setValue:self.fieldCaption.text forKey:@"caption"];
+    [self.params setValue:self.fieldDescription.text forKey:@"description"];
+    
+    
+    
+    [FBRequestConnection startWithGraphPath:@"me/feed"
+                                 parameters:self.params
+                                 HTTPMethod:@"POST"
+                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+    {
+        NSString *alertText;
+        if ( error )
+        {
+            alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d", error.domain, error.code];
+        }
+        else
+        {
+            alertText = [NSString stringWithFormat:@"Posted action, id: %@", [result objectForKey:@"id"]];
+        }
+        
+        [Common showAlertWithTitle:@"Result" andMessage:alertText];
+    }];
+}
+
+
+
+
 #pragma mark - Facebook
 
 
-- (void)sessionStateChanged:(NSNotification*)notification
+- (void) sessionStateChanged:(NSNotification*)notification
 {
-    if ( FBSession.activeSession.isOpen )
-    {
-        [self.buttonAuth setTitle:@"Logout" forState:UIControlStateNormal];
-    }
-    else
-    {
-        [self.buttonAuth setTitle:@"Login" forState:UIControlStateNormal];
-    }
+    [self trigUiAccordingToSession];
 }
 
 
@@ -168,15 +306,13 @@
 {
     UITouch *touch = [[event allTouches] anyObject];
     
-    if ( [self.labelName isFirstResponder] && self.labelName != touch.view )
+    if ( currentFirstResponder != touch.view )
     {
-        [self.labelName resignFirstResponder];
-    }
-    else if ( [self.labelMessage isFirstResponder] && self.labelMessage != touch.view )
-    {
-        [self.labelMessage resignFirstResponder];
+        [currentFirstResponder resignFirstResponder];
+        currentFirstResponder = nil;
     }
 }
+
 
 
 

@@ -63,7 +63,8 @@
 
 - (void)dealloc
 {
-
+    [postingViewController release];
+    
     [super dealloc];
 }
 
@@ -73,15 +74,27 @@
 #pragma mark - Actions
 
 
-
-
 - (IBAction)clickedPostToFeed:(id)sender
 {
-    PostingViewController *controller = [[PostingViewController alloc] init];
-    controller.testProperty = @"dfs";
-    [self.navigationController pushViewController:controller animated:YES];
-    [controller release];    
+    /*
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^
+    {
+        postingViewController = [[PostingViewController alloc] init];
+        
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params setValue:@"self.fieldMessage.text" forKey:@"message"];
+        [params setValue:@"http://ya.ru" forKey:@"link"];
+        [params setValue:@"self.fieldCaption.text" forKey:@"caption"];
+        [params setValue:@"self.fieldDescription.text" forKey:@"description"];
+        postingViewController.params = params;
+    });
+    
+    [self.navigationController pushViewController:postingViewController animated:YES];
+     */
 }
+
+
 
 
 @end

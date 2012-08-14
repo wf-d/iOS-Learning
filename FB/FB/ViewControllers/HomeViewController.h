@@ -16,6 +16,9 @@
 
 
 @interface HomeViewController : UIViewController
+{
+    PostingViewController *postingViewController;
+}
 
 
 - (IBAction)clickedPostToFeed:(id)sender;
