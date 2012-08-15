@@ -112,11 +112,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "FB/ViewControllers/FriendListViewController.m"
-         timestampString = "366640767.24099"
+         timestampString = "366700860.378092"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "138"
-         endingLineNumber = "138"
+         startingLineNumber = "165"
+         endingLineNumber = "165"
          landmarkName = "-loadPage:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -144,6 +144,45 @@
          startingLineNumber = "48"
          endingLineNumber = "48"
          landmarkName = "+stringFromLongLong:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "FB/ViewControllers/FriendListViewController.m"
+         timestampString = "366700860.378092"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "267"
+         endingLineNumber = "267"
+         landmarkName = "-tableView:willDisplayCell:forRowAtIndexPath:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "FB/ViewControllers/FriendListViewController.m"
+         timestampString = "366700860.378092"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "122"
+         endingLineNumber = "122"
+         landmarkName = "-setCurrentPage:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "FB/ViewControllers/FriendListViewController.m"
+         timestampString = "366700860.378092"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "134"
+         endingLineNumber = "134"
+         landmarkName = "-loadPage:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

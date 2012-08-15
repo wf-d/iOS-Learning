@@ -21,17 +21,17 @@
 UITableViewDelegate>
 {
     NSMutableArray *friends;
-    NSUInteger currentPage;
 }
 
-@property (retain, nonatomic) NSString *previousPageGraphPath;
-@property (retain, nonatomic) NSString *nextPageGraphPath;
+
+@property (assign, nonatomic) NSUInteger currentPage;
 
 @property (retain, nonatomic) IBOutlet UITableView *tableViewFriends;
-@property (retain, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (retain, nonatomic) UIActivityIndicatorView *activityIndicator;
 
 
 - (void) loadPage:(NSUInteger)page;
+- (void) showFriendsCount;
 
 
 @end

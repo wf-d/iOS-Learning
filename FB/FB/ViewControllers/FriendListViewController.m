@@ -14,7 +14,7 @@
 
 
 
-NSUInteger const itemsPerPage = 5; 
+NSUInteger const itemsPerPage = 10; 
 
 
 
@@ -24,7 +24,7 @@ NSUInteger const itemsPerPage = 5;
 
 #pragma mark - Synthesize
 
-@synthesize nextPageGraphPath =_nextPageGraphPath, previousPageGraphPath =_previousPageGraphPath;
+@synthesize currentPage = _currentPage;
 @synthesize tableViewFriends;
 @synthesize activityIndicator;
 
@@ -51,6 +51,19 @@ NSUInteger const itemsPerPage = 5;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    CGFloat offset = (self.navigationController.navigationBar.frame.size.height-self.activityIndicator.frame.size.height) * 0.5;
+    self.activityIndicator.frame = CGRectMake(
+                                              self.navigationController.navigationBar.frame.size.width - self.activityIndicator.frame.size.width - offset,
+                                              offset,
+                                              self.activityIndicator.frame.size.width,
+                                              self.activityIndicator.frame.size.height);
+    
+    self.activityIndicator.hidesWhenStopped = YES;
+    [self.activityIndicator release];
+    
+    [self.navigationController.navigationBar addSubview:self.activityIndicator];
 }
 
 
@@ -68,9 +81,8 @@ NSUInteger const itemsPerPage = 5;
 
 - (void) viewWillAppear:(BOOL)animated
 {    
-    friends = [NSMutableArray new];
-    currentPage = 0;
-    [self loadPage:currentPage];
+    [self showFriendsCount];
+    self.currentPage = 0;
 }
 
 
@@ -104,14 +116,31 @@ NSUInteger const itemsPerPage = 5;
 
 
 
+#pragma mark - UI Helpers
+
+
+- (void) setCurrentPage:(NSUInteger)currentPage
+{
+    _currentPage = currentPage;
+    [self loadPage:_currentPage];
+}
+
+
+
+
 #pragma mark - Facebook
-
-
 
 
 - (void) loadPage:(NSUInteger)page
 {   
     [self.activityIndicator startAnimating];
+    
+    
+    if ( page == 0 )
+    {
+         friends = [NSMutableArray new];
+    }
+    
     
     NSString *graphPath = [NSString stringWithFormat:@"me/friends?limit=%u&offset=%u", itemsPerPage, page*itemsPerPage];
     
@@ -120,14 +149,12 @@ NSUInteger const itemsPerPage = 5;
                                  HTTPMethod:@"GET" 
                           completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
      {
-         
-         
-         NSString *alertText;
          if ( error )
          {
-             alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d", error.domain, error.code];
+             NSString *alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d", error.domain, error.code];
              NSLog(@"%@", alertText);
              NSLog(@"accessToken: %@", FBSession.activeSession.accessToken);
+             [Common showAlertWithTitle:@"Result" andMessage:alertText];
          }
          else
          {        
@@ -139,19 +166,46 @@ NSUInteger const itemsPerPage = 5;
                  User *friend = [[User alloc] initWithDictionary:dict];
                  [friends addObject:friend];
                  [friend release];
-                 [indexPaths addObject:[NSIndexPath indexPathForRow:currentPage*itemsPerPage+i inSection:0]];
+                 [indexPaths addObject:[NSIndexPath indexPathForRow:self.currentPage*itemsPerPage+i inSection:0]];
              }
              
              [self.tableViewFriends insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-             
-             //[self.tableViewFriends reloadData];
              [self.activityIndicator stopAnimating];
-             
-             self.title = [NSString stringWithFormat:@"Friends (%d)", [friends count]];
          }
-         
-         //[Common showAlertWithTitle:@"Result" andMessage:alertText];
      }];
+}
+
+
+
+
+- (void) showFriendsCount
+{
+    NSString *graphPath = @"fql";
+    NSString *fqlQuery = @"SELECT friend_count FROM user WHERE uid = me()";
+    NSDictionary *params = [[NSDictionary alloc] initWithObjectsAndKeys:
+                            fqlQuery, @"q",
+                            nil];
+    
+    [FBRequestConnection startWithGraphPath:graphPath
+                                 parameters:params 
+                                 HTTPMethod:@"GET" 
+                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+    {
+        [params release];
+        
+        if ( error )
+        {
+            NSString *alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d", error.domain, error.code];
+            NSLog(@"%@", alertText);
+            NSLog(@"accessToken: %@", FBSession.activeSession.accessToken);
+            [Common showAlertWithTitle:@"Result" andMessage:alertText];
+        }
+        else
+        {
+            NSString *friendsCount = [[[result valueForKey:@"data"] objectAtIndex:0] valueForKey:@"friend_count"];
+            self.title = [NSString stringWithFormat:@"Friends (%@)", friendsCount];
+        }
+    }];
 }
 
 
@@ -192,7 +246,7 @@ NSUInteger const itemsPerPage = 5;
 /*
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 64.0f;
+    return 96.0f;
 }
 */
 
@@ -201,7 +255,6 @@ NSUInteger const itemsPerPage = 5;
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //[self loadPage:++currentPage];
 }
 
 
@@ -209,9 +262,9 @@ NSUInteger const itemsPerPage = 5;
 
 - (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ( indexPath.row == currentPage*itemsPerPage + itemsPerPage-2 )
+    if ( indexPath.row == self.currentPage*itemsPerPage ) // Load next page when dispalaying first item of current page.
     {
-        [self loadPage:++currentPage];
+        self.currentPage++;
     }
 }
 
